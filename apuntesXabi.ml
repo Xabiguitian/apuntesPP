@@ -437,3 +437,67 @@ Hint: Did you mean fastfib?
 - : float = 0.0300090000000068358
 # crono fastfib 500_000;;
 - : float = 0.0451759999999978845
+
+(*-----------------------------------------------------------------*)
+
+# let fib n =
+  let rec aux (i, u, p) =
+      if i = n then u
+      else aux (i+1, u+p, u)
+  in aux (1, 1, 0);;
+val fib : int -> int = <fun>
+# [1; 2; 3; 10];;
+- : int list = [1; 2; 3; 10]
+# [1; -2; 0];;
+- : int list = [1; -2; 0]
+# let p = (7, "dos");;
+val p : int * string = (7, "dos")
+# 1 + fst p;;
+- : int = 8
+# snd p;;
+- : string = "dos"
+# let n, s = p;;
+val n : int = 7
+val s : string = "dos"
+# ['a'; 'e'; 'u'];;
+- : char list = ['a'; 'e'; 'u']
+# [];;
+- : 'a list = []
+# [(); (); ()];;
+- : unit list = [(); (); ()]
+# 3;;
+- : int = 3
+# [3];;
+- : int list = [3]
+# let l = [1; 2; 3; 10];;
+val l : int list = [1; 2; 3; 10]
+# List.hd l;;
+- : int = 1
+# List.hd ['a];;
+Error: Syntax error
+# List.hd ['a'];;
+- : char = 'a'
+# List.hd [];;
+Exception: Failure "hd".
+# List.tl l;;
+- : int list = [2; 3; 10]
+# List.tl [];;
+Exception: Failure "tl".
+# List.tl ["hola"];;
+- : string list = []
+# let rec length l =
+  if List.tl l = [] then 1
+  else 1 + length (List.tl l);;
+val length : 'a list -> int = <fun>
+# length [1;2];;
+- : int = 2
+# length [];;
+Exception: Failure "tl".
+# let rec length l =
+  if l = [] then 0
+  else 1 + length (List.tl l);;
+val length : 'a list -> int = <fun>
+# length [1;2];;
+- : int = 2
+# length [];;
+- : int = 0
