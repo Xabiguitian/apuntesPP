@@ -501,3 +501,53 @@ val length : 'a list -> int = <fun>
 - : int = 2
 # length [];;
 - : int = 0
+
+(*-----------------------------------------------------------------*)
+
+# let rec length l =
+  if l =   [] then 0
+  else   1 + length (List.tl l);;
+val length : 'a list -> int = <fun>
+# let length l =
+      let rec loop (i, l) =
+          if l = [] then i
+          else loop(i+1, List.tl l)
+      in loop (0, l);;
+val length : 'a list -> int = <fun>
+# 1 :: (2 :: (3 :: []));;
+- : int list = [1; 2; 3]
+# let h = 1;;
+val h : int = 1
+# let t = [2; 3];;
+val t : int list = [2; 3]
+# let l = [];;
+val l : 'a list = []
+# let h::t = l;;
+Warning 8 [partial-match]: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+[]
+
+Exception: Match_failure ("//toplevel//", 1, 4).
+# let hd = function
+      h::_ -> h;;
+Warning 8 [partial-match]: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+[]
+
+val hd : 'a list -> 'a = <fun>
+# let hd (h::_) = h;;
+Warning 8 [partial-match]: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+[]
+
+val hd : 'a list -> 'a = <fun>
+# let tl (_::t) = t;;
+Warning 8 [partial-match]: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+[]
+
+val tl : 'a list -> 'a list = <fun>
+# let rec length = function
+      [] -> 0
+    | _::t -> 1 +length t;;
+val length : 'a list -> int = <fun>
