@@ -551,3 +551,57 @@ val tl : 'a list -> 'a list = <fun>
       [] -> 0
     | _::t -> 1 +length t;;
 val length : 'a list -> int = <fun>
+
+(*-----------------------------------------------------------------*)
+
+# (@);;
+- : 'a list -> 'a list -> 'a list = <fun>
+# [1; 2; 3] @ (10 :: [1+1; 2+2; 3+3]);;
+- : int list = [1; 2; 3; 10; 2; 4; 6]
+# List.append;;
+- : 'a list -> 'a list -> 'a list = <fun>
+# List.append ['a'; 'e']['u'; 'i'; 'o'];;
+- : char list = ['a'; 'e'; 'u'; 'i'; 'o']
+#
+  let rec append l1 l2 =
+    if l1 = [] then l2
+    else hd l1 :: append (tl l1) l2;;
+Error: Unbound value hd
+#
+    let rec append l1 l2 =
+      if l1 = [] then l2
+      else hd l1 :: append (tl l1) l2;;
+Error: Unbound value hd
+#
+  let rec app  end l1 l2 =
+    if l1 = [ [] then l2
+    e  lse List.hd l1 :: append (List.tl l1) l2;;
+val append : 'a list -> 'a list -> 'a list = <fun>
+# append [true] [true; true; false;]
+  ;;
+- : bool list = [true; true; true; false]
+#
+  let rec append = funcion
+    [] -> (function l -> l)
+    | h::t -> (function l -> h :: append t l);;
+Error: Syntax error
+#
+let rec   append = function
+  [] ->   (function l -> l)
+  | h::  t -> (function l -> h :: append t l);;
+val append : 'a list -> 'a list -> 'a list = <fun>
+# #exit;;
+Unknown directive exit.
+# #quit;;
+
+(*-----------------------------------------------------------------*)
+
+let rec append l1 l2 =
+  if l1 = [] then l2
+  else List.hd l1 :: append (List.tl l1) l2;;
+
+let rec append = function
+  [] -> (function l -> l)
+  | h::t -> (function l -> h :: append t l);;
+  
+(*-----------------------------------------------------------------*)
