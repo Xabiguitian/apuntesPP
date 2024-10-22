@@ -605,3 +605,72 @@ let rec append = function
   | h::t -> (function l -> h :: append t l);;
   
 (*-----------------------------------------------------------------*)
+
+# let rec lmax l =
+      if List t.tl l = [] then List.hd l
+      else if List.hd l>lmax (List.tl l) then List.hd l
+          else lmax (List.tl l);;
+Error: Syntax error
+# let rec lmax l =
+      if List.tl l = [] then List.hd l
+      else if List.hd l>lmax (List.tl l) then List.hd l
+          else lmax (List.tl l);;
+val lmax : 'a list -> 'a = <fun>
+# lmax [1; 2; 3;];;
+- : int = 3
+# let rec lmax = function
+      h::[] -> h
+    | h::t -> if h > lmax t then h else lmax t;;
+Warning 8 [partial-match]: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+[]
+
+val lmax : 'a list -> 'a = <fun>
+# lmax [1; 2; 3;];;
+- : int = 3
+# List.init;;
+- : int -> (int -> 'a) -> 'a list = <fun>
+# List.init 5 (function x -> 2 * x);;
+- : int list = [0; 2; 4; 6; 8]
+# List.init 100 (function i -> i);;
+- : int list =
+[0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20;
+ 21; 22; 23; 24; 25; 26; 27; 28; 29; 30; 31; 32; 33; 34; 35; 36; 37; 38; 39;
+ 40; 41; 42; 43; 44; 45; 46; 47; 48; 49; 50; 51; 52; 53; 54; 55; 56; 57; 58;
+ 59; 60; 61; 62; 63; 64; 65; 66; 67; 68; 69; 70; 71; 72; 73; 74; 75; 76; 77;
+ 78; 79; 80; 81; 82; 83; 84; 85; 86; 87; 88; 89; 90; 91; 92; 93; 94; 95; 96;
+ 97; 98; 99]
+# List.init 100 (fun i -> i);;
+- : int list =
+[0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; 14; 15; 16; 17; 18; 19; 20;
+ 21; 22; 23; 24; 25; 26; 27; 28; 29; 30; 31; 32; 33; 34; 35; 36; 37; 38; 39;
+ 40; 41; 42; 43; 44; 45; 46; 47; 48; 49; 50; 51; 52; 53; 54; 55; 56; 57; 58;
+ 59; 60; 61; 62; 63; 64; 65; 66; 67; 68; 69; 70; 71; 72; 73; 74; 75; 76; 77;
+ 78; 79; 80; 81; 82; 83; 84; 85; 86; 87; 88; 89; 90; 91; 92; 93; 94; 95; 96;
+ 97; 98; 99]
+# lmax(List.init 100 (fun i->i));;
+Interrupted.
+# lmax(List.init 40 (fun i->i));;
+Interrupted.
+# lmax(List.init 25 (fun i->i));;
+- : int = 24
+# let rec lmax = function
+      [] -> raise (Failure "hd")
+    | h::[] -> h
+    | h::t -> let m = lmax t in
+          if h > m then h else m;;
+val lmax : 'a list -> 'a = <fun>
+# lmax(List.init 100_000 (fun i->i));;
+- : int = 99999
+# let rec lmax = function
+      [] -> raise (Failure "hd")
+    | h::[] -> h
+    | h::t -> max h (lmax t);;
+val lmax : 'a list -> 'a = <fun>
+# let rec lmax = function
+      [] -> raise (Failure "hd")
+    | h::[] -> h
+    | h1::h2::t -> lmax (max h1 h2:: t);;
+val lmax : 'a list -> 'a = <fun>
+
+(*-----------------------------------------------------------------*)
