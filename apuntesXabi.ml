@@ -551,3 +551,58 @@ val tl : 'a list -> 'a list = <fun>
       [] -> 0
     | _::t -> 1 +length t;;
 val length : 'a list -> int = <fun>
+
+(*-----------------------------------------------------------------*)
+
+# List.fold_left;;
+- : ('acc -> 'a -> 'acc) -> 'acc -> 'a list -> 'acc = <fun>
+# let sumlist = List.fold_left (+) 0;;
+val sumlist : int list -> int = <fun>
+# sumlist [1;2;3];;
+- : int = 6
+# sumlist (List.init 3_000_000 succ);;
+- : int = 4500001500000
+# let lmax = function
+  ;;
+Error: Syntax error
+# Random.int 3;;
+- : int = 0
+# Random.int 3;;
+- : int = 1
+# Random.int 3;;
+- : int = 0
+# Random.int 3;;
+- : int = 1
+# Random.int 3;;
+- : int = 0
+# Random.int 3;;
+- : int = 0
+# Random.int 3;;
+- : int = 0
+# Random.int 3;;
+- : int = 2
+# Random.int 3;;
+- : int = 2
+# let length l = List.fold_left (fun a _ -> a + 1) 0 1;;
+Error: This expression has type int but an expression was expected of type
+         'a list
+# let ?length l = List.fold_left (fun a _ -> a + 1) 0 1;;
+Error: Syntax error
+# let length l = List.fold_left (fun a _ -> a + 1) 0 1;;
+Error: This expression has type int but an expression was expected of type
+         'a list
+# List.for_all;;
+- : ('a -> bool) -> 'a list -> bool = <fun>
+# let last = function
+      [] -> raise (Failure "last")
+    | h::t -> List.fold_left (fun _ e -> e) h t;;
+val last : 'a list -> 'a = <fun>
+# last (List.init 50 (fun i -> char_of_int (45 + i)));;
+- : char = '^'
+# let for_all p l =
+      List.fold_left (fun acc e -> acc && p e) true l;;
+val for_all : ('a -> bool) -> 'a list -> bool = <fun>
+# for_all (fun n-> n mod 2 = 0) [2;4;8];;
+- : bool = true
+# for_all (fun n-> n mod 2 = 0) [2;3;8];;
+- : bool = false
