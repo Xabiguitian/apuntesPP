@@ -529,3 +529,139 @@ let rev l =
 	List.fold_left (function acc -> function h -> h::acc) [] l
 ;;
 (*Esta funcion está invirtiendo la lista porque lo que se guarada en el acumulador va a la cabeza de la lista*)
+
+(*28 OCTUBRE*)
+
+let rec lmax = function 	(*Esta función no se podra usar con la lista vacía*)
+	h::[] -> h
+	| h::t -> 
+			if h >= lmax t then h else lmax t		
+;;
+
+let rec lmax = function
+	h::[] -> h
+	| h::t -> max h (lmax t)
+;;
+
+(*Ambas son funciones recursivas terminam¡les*)
+
+(*Misma función pero terminal*)
+let lmax (h::t) =
+	let rec aux m = function 
+		[] -> m
+	| h::t -> aux (max h m) t 
+in
+	aux h t 
+;;
+
+let rec lmax = function 
+	h::[] -> h
+	| h1::h2::t -> lmax (max h1 h2 :: t)
+;;
+
+let lmax = function 
+	[] -> raise (Invalid_argument "lmax")
+	| h::t -> List.fold_left h t 
+;;
+
+let rec append l1 l2 = 
+	match l1 with 
+		[] -> l2
+		| h::t -> h :: append t l2
+;;
+
+let rec rev_append l1 l2 = 
+	match l1 with 
+	[] -> l2 
+	| h::t -> rev_append t (h::l2)
+;;
+
+let append' l1 l2 = 
+	List.rev_append (List.rev l1) l2
+;;
+(*Es terminal porque rev_append lo es y rev también*)
+
+let rev l =
+	List.rev_append l []
+;;
+
+let rev l =
+	List.fold_left 
+		(function a -> function x -> x::a) [] l
+;;
+
+let rev l =
+	List.fold_left 
+		(fun a x -> x::a) [] l
+;;
+
+let rev = function 
+	[] -> l1
+	| h::t -> (rev t) @ [h]
+;;
+
+let rec for_all p = function 
+	[] -> true
+	| h::t -> p h && for_all p t 
+;;
+
+let for_all p l = 
+	List.fold:left (fun a x -> -> p x && atan) true l
+;;
+
+
+(*29 OCTUBRE*)
+
+(*funcion que nos diga que la lista está ordenada*)
+let rec sorted = function
+	hi::h2::t -> hi <= h2 && sorted (h2::t)		
+	| _ -> true 
+;;
+(*funcion polimórfica porque estamos haciendo la comparacion con <=*)
+(*Funcion terminal, si es true se hace el sortes y solo el sorted, el and no queda pendiente*)
+
+let rec insert x = function
+	[] -> [x]						(*Insertar elemento a una lista vacia*)
+	| h::t -> 
+		if x <= h then x::h::t		(*insertar elemento a una lista que tiene cabeza y cola*)
+		else h :: insert x t
+;;
+(*Función no terminal*)
+
+(*Implementacion termibnal de insert*)	(*Cuando se vean elementos menores a los que queremos insertar, estos se añaden a un acumulador*)
+let rec insert' x l = 
+	let rec aux (before, after) = 
+		match after with 
+		[] -> List.rev (x::before) (*El elemento tiene que ir al final*)
+		| h::t -> 
+			if x <= h 
+			then List.rev_append before (x::after)			(*h::t = after*)
+			else aux (h::before, t) 
+	in
+	  aux ([], l)
+;;
+
+(*ALGORTIMO DE ORDENACION I_SORT*)
+let rec i_sort = function 
+	[] -> []
+	| h::t -> insert' h (i_sort t)
+;;
+
+(*Version terminal de este algoritmo de ordenación*)
+let i_sort' l =  
+	let rec aux sorted = function 
+		[] -> sorted 
+		| h::t -> aux(insert' h sorted) t 
+	in
+	  aux [] l
+;; 
+
+Random.int;; (*Generar numero aleatorio*)
+
+List.init 100 (function _ -> Random.int 1000);; (*Lista de 100 numeros pseudoaleatorios*)
+
+let crono f x = 
+	let t = Sys.time () in 
+	let _ = f x in 
+	Sys.time () -. t
+;;
