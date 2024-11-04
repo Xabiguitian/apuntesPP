@@ -199,4 +199,51 @@ let rec fib n = ( * n >= 1 * )
   (*22-10-24*)
 
 
-  
+  (*1-11-24*)
+
+let rec insert x=function
+  []->[x]
+ |h 11t -> if x < h the x1:h1|t 
+      else h :: insert x t;;
+
+
+let rec isort=function
+  []->[]
+ |h:: t -> insert h(isort t);;
+
+
+let crono f x=
+  let t=Sys.time() in
+  let _ =f x in
+  Sys.time()-.t;;
+
+
+
+
+(*FUSIÓN*)
+(* merge : 'a list -> 'a list -> 'a list*)
+(*'a list * 'a list->'a list*)
+
+
+let rec merge = function
+      ([],l) | (l,[])->l
+    | (h1::t1, h2::t2)->if h1<=h2
+                        then h1 :: merge (t1, h2::t2)
+                        else h2 :: merge (h1:: t1, t2);;
+
+
+
+(*FUNCIÓN DIVIDE*)
+(*divide: 'a list-> 'a list + 'a list*)
+
+let rec  divide = function
+          (h1::h2::t)->let t1, t2=divide t in 
+                        (h1:: t1, h2::t2)
+        | l -> l, [];;
+
+
+
+let rec m_sort l= match l with
+    []_::[]->l
+    l_ ->let  l1, l2 = divide l in 
+    merge (m_sort l1, m_sort l2);;
