@@ -679,3 +679,63 @@ val crono : ('a -> 'b) -> 'a -> float = <fun>
 - : float = 0.0381529999999941083
 # crono i_sort (List.init 300_000 succ);;
 - : float = 0.0571350000000023783
+
+(*-----------------------------------------------------------------*)
+
+# let rec insert x = function
+      [] -> [x]
+   |  h::t -> if x <= h then x::h::t
+          else h::insert x t;;
+val insert : 'a -> 'a list -> 'a list = <fun>
+# let rec isort = function
+      [] -> []
+    | h::t -> insert h (isort t);;
+val isort : 'a list -> 'a list = <fun>
+# let crono f x =
+      let t = Sys.time () in
+      let _ = f x in
+      Sys.time () -. t;;
+val crono : ('a -> 'b) -> 'a -> float = <fun>
+# let rec merge = function
+      ([], l) | (l, []) ->
+    | (h1::t1, h2::t2) -> if h1 <= h2
+                          then h1 :: merge (t1, h2::t2)
+                          then h2 :: merge (h1::t1, t2);;
+Error: Syntax error
+# let rec merge = function
+      ([], l) | (l, []) -> l
+    | (h1::t1, h2::t2) -> if h1 <= h2
+                          then h1 :: merge (t1, h2::t2)
+                          then h2 :: merge (h1::t1, t2);;
+Error: Syntax error
+# let rec merge = function
+      ([], l) | (l, []) -> l
+    | (h1::t1, h2::t2) -> if h1 <= h2
+                          then h1 :: merge (t1, h2::t2)
+                          else h2 :: merge (h1::t1, t2);;
+val merge : 'a list * 'a list -> 'a list = <fun>
+# let rec divide = function
+      (h1::h2::t) -> let t1, t2 = divide t in
+                     (h1::t1, h2::t2)
+   | l -> l,[];;
+val divide : 'a list -> 'a list * 'a list = <fun>
+# divide [1;3;8];;
+- : int list * int list = ([1; 8], [3])
+# let m_sort l =
+      let l1, l2 = divide l in
+      merge (m_sort l1, m_sort l2);;
+Error: Unbound value m_sort
+Hint: Did you mean isort?
+Hint: If this is a recursive definition,
+you should add the rec keyword on line 1
+# let rec m_sort l =
+      let l1, l2 = divide l in
+      merge (m_sort l1, m_sort l2);;
+val m_sort : 'a list -> 'b list = <fun>
+# m_sort [1;3;2];;
+Stack overflow during evaluation (looping recursion?).
+# let rec m_sort l = match l with
+      [] | _::[] -> l
+    | _ -> let l1, l2 = divide l in
+           merge (m_sort l1, m_sort l2);;
+val m_sort : 'a list -> 'a list = <fun>
