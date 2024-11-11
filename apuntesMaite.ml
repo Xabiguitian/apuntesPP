@@ -665,3 +665,157 @@ let crono f x =
 	let _ = f x in 
 	Sys.time () -. t
 ;;
+
+(*4 NOVIEMBRE*)
+
+let rec sorted_g ord = function
+	h1::h2::t -> ord h1 h2 && sorted_g ord (h2::t)
+	|_ -> true
+;;
+
+let rec insert x = function
+	[] -> [x]
+	| h::t -> 
+		if x <= h then x::h::t
+		else h :: insert x t
+;;
+
+(*Algoritmo de inserción generalizado*)
+let rec isort = function
+	[] -> []
+	| h::t -> insert_g ord h (isort t)
+;;
+
+(*Funcion que fusiona dos listas*)
+let rec fusion l1 l2 = 
+	match l1, l2 with
+	 [], l | l, [] -> l 
+	| h1::t1, h2::t2 -> 
+		if h1 <= h2 
+		then h1 :: fusion tl l2		(*l2 = h2::t2*)
+		else h2 :: fusion l1 t2
+;;
+
+let rec divide = function 
+	h1::h2::t -> 
+		let t1, t2 = divide t in 
+		h1::t1, h2::t2
+	| l -> l, []
+;;
+
+let rec merge_sort l = 
+	match l with 
+		[] | [_] -> l
+	| _ -> 
+		let l1, l2 = divide l in 
+		fusion (merge_sort l1) (merge_sort l2)
+;;
+
+(*5 NOVIEMBRE*)
+
+let rec divide = function
+	h1::h2::t -> 
+		let l1, l2 = divide t in 
+		h1::l1, h2::l2
+	 | l -> l, []
+;;
+
+let divide' l =
+	let rec aux acc1 acc2  function
+	 l1 -> acc1 acc2 
+	| [h] -> h::acc1, acc2
+	| h1::h2::t -> 
+		aux (h1::acc1) (h2::acc2) t
+    in             
+	  aux [] [] l 
+;; 
+
+let rec fusion l1 l2 = 
+	match l1, l2 with
+		[], l | l, [] -> 1
+	| h1::t1, h2::t2 -> 
+		if h1 <= h2
+			then h1 :: fusion t1 l2 
+			else h2 :: fusion l1 t2
+	;; 
+
+	let fusion' l1 l2 = 
+		let rec aux acc = function
+		[], l | l, [] -> 
+			list,rev_append acc l
+		| hi::t1, h2::t2 ->
+			if h1 <= h2
+		    then aux (h1::acc) (t1, h2::t2)
+		    else aux (h2::acc) (h1::t1, t2)
+	 in
+	 	aux [] (l1, l2)
+	;;
+
+let rec merge_sort' ord l = 
+	match l with[] -> l
+	[] | [_] -> l
+	| _ -> 
+		let l1, l2 = divide' l in 
+		(merge_sort' ord l1) (merge_sort' ord l2)
+		fusion' ord (merge_sort' ord l1) (merge_sort' ord l2)
+;;
+
+(*11 NOVIEMBRE*)
+
+(*PROBLEMA DE LAS 8 REINAS (WIKIPEDIA)*)
+(*Tablero 4x4*)
+reinas : int -> (int * int)  list list
+
+'a option (*Tipo que sirve para cualquier tipo 'a*)
+
+# None;;
+- : 'a option = None
+
+# Some 3;;
+- : int option = Some 3
+
+(*Función de división entera que devuelva None cuando se haga una division por 0 en vez de dar error*)
+let (//) m n = 
+if n <> 0
+	then Some (m / n)
+else None
+;;
+
+# 3 // 2;;
+- : int option = Some 1
+
+# 3 // 0;;
+- : int option = None
+
+(*Si una dama en la casilla (i1, j1), ver si causa problemas (si se comen) con otra (i2, j2)*)
+
+let come (i1, j1) (i2, j2) = 
+	i1 = i2 || 	(*Están en la misma fila*)
+	j1 = j2 ||	(*Están en la misma columna*)
+	abs(i1 - i2) = abs(j1 - j2)	
+							(*Están en la misma diagonal*)
+;;
+
+
+let rec compatible c = function
+	[] -> true 
+ | h::t -> not (come c h) && compatible c t
+;;
+
+let reinas n = 
+	let rec completa camino (i, j) = 
+		if i > n then Some camino
+		else if j > n then None
+					else if compatible (i, j) camino
+							 then 
+									match completa ((i, j) :: camino) (i+1, 1) with
+										None -> completa camino (i, j+1)
+									 | solucion -> solucion
+							 completa ((i, j) :: camino) (i+1, 1)
+							 else completa camino (i, j+1)
+  in
+ 		completa [] (1, 1)
+  ;;
+
+  (*12 OCTUBRE*)
+  
