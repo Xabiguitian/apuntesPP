@@ -893,3 +893,27 @@ val m_sort : 'a list -> 'a list = <fun>
 val divide' : 'a list -> 'a list * 'a list = <fun>
 # divide' ['a'; 'e'; 'i'; 'o'; 'u'];;
 - : char list * char list = (['u'; 'i'; 'a'], ['o'; 'e'])
+
+(*-----------------------------------------------------------------*)
+
+# let hd' l =
+      try List.hd l with
+          Failure "tl" -> [];;
+Warning 52 [fragile-literal-pattern]: Code should not depend on the actual values of
+this constructor's arguments. They are only for information
+and may change in future versions. (see manual section 13.5.3)
+
+val hd' : 'a list list -> 'a list = <fun>
+# List.hd [];;
+Exception: Failure "hd".
+# hd' [1;2;3];;
+Error: This expression has type int but an expression was expected of type
+         'a list
+# let tl' l =
+      try List.tl l with
+          Failure _ -> [];;
+val tl' : 'a list -> 'a list = <fun>
+# tl' [1;2;3];;
+- : int list = [2; 3]
+# tl' [];;
+- : 'a list = []
