@@ -819,3 +819,58 @@ let reinas n =
 
   (*12 OCTUBRE*)
   
+(*Definicion de tipos en ocaml, soporte de las excepciones*)
+
+type exn = 
+    Failure of string
+   | Division_by_zero
+   | Invalid_argument of string
+   |Not_found
+   | ...
+   | Reinas
+;;
+
+exception Reinas;;
+(*Solo se puede añadir casos en tiempo de ejecucion con type*)
+
+raise : exn -> 'a
+
+try 
+  <e>
+ with
+    <exn1> -> <e1>
+   |  <exn2> -> <e2>
+   | ...
+;;
+
+let tl' l = 
+  try List.tl l with
+  Failure _ -> []
+;;
+
+(*Lo aplicamos en la función reinas*)
+let reinas n = 
+	let rec completa camino (i, j) = 
+		if i > n then camino
+		else if j > n then raise Not_found
+					else if compatible (i, j) camino
+							 then 
+									try completa ((i, j) :: camino) (i+1, 1) with
+										Not_found -> completa camino (i, j+1)
+							 else completa camino (i, j+1)
+  in
+ 		completa [] (1, 1)
+;;
+
+let all_reinas n = 
+	let rec completa camino (i, j) = 
+		if i > n then [camino]
+		else if j > n then []
+					else if compatible (i, j) camino
+							 then 
+							 completa ((i, j) :: camino) (i+1, 1) @
+               completa camino (i, j+1)
+							 else completa camino (i, j+1)
+  in
+ 		completa [] (1, 1)
+;;
