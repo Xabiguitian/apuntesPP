@@ -917,3 +917,125 @@ val tl' : 'a list -> 'a list = <fun>
 - : int list = [2; 3]
 # tl' [];;
 - : 'a list = []
+
+(*-----------------------------------------------------------------*)
+
+# let come (i1,j1) (i2,j2) =
+    i1 = i  2 || j1 = j2 || abs (i1-i2) = abs (j1-j2);;
+val come : int * int -> int * int -> bool = <fun>
+# let compatible q l =
+      not (List.exist (come q) l);;
+Error: Unbound value List.exist
+Hint: Did you mean exists?
+# let compatible q l =
+      not (List.exists (come q) l);;
+val compatible : int * int -> (int * int) list -> bool = <fun>
+# let reinas n =
+      let rec completar camino i j =
+          if i > n then camino
+          else if j > n then raise Not_found
+          else if compatible (i, j) camino
+                  then try completar ((i,j)::camino)(i+1) 1
+                       with completar camino i (j+1)
+                else completar camino i (j+1)
+      in completar [] 1 1;;
+Error: Syntax error
+# let reinas n =
+    le  t rec completar camino i j =
+          if i > n then camino
+          else if j > n then raise Not_found
+          else if compatible (i, j) camino
+                  then try completar ((i,j)::camino)(i+1) 1
+                       with Not_found -> completar camino i (j+1)
+                else completar camino i (j+1)
+    in   completar [] 1 1;;
+val reinas : int -> (int * int) list = <fun>
+# reinas 0;;
+- : (int * int) list = []
+# reinas 1;;
+- : (int * int) list = [(1, 1)]
+# reinas 2;;
+Exception: Not_found.
+# reinas 3;;
+Exception: Not_found.
+# reinas 4;;
+- : (int * int) list = [(4, 3); (3, 1); (2, 4); (1, 2)]
+# reinas 8;;
+- : (int * int) list =
+[(8, 4); (7, 2); (6, 7); (5, 3); (4, 6); (3, 8); (2, 5); (1, 1)]
+# reinas 128;;
+Interrupted.
+# reinas 30;;
+Interrupted.
+# reinas 20;;
+- : (int * int) list =
+[(20, 11); (19, 6); (18, 14); (17, 7); (16, 10); (15, 8); (14, 19); (13, 16);
+ (12, 9); (11, 17); (10, 20); (9, 18); (8, 12); (7, 15); (6, 13); (5, 4);
+ (4, 2); (3, 5); (2, 3); (1, 1)]
+# let reinas n =
+      let rec completar camino i j =
+          if i > n then Some camino
+          else if j > n then None
+          else if compatible (i, j) camino
+                  then match completar ((i,j)::camino)(i+1) 1
+                       with None -> completar camino i (j+1)
+                          | Some sol -> Some sol
+                else completar camino i (j+1)
+    in   completar [] 1 1;;
+val reinas : int -> (int * int) list option = <fun>
+# reinas 0;;
+- : (int * int) list option = Some []
+# reinas 1;;
+- : (int * int) list option = Some [(1, 1)]
+# reinas 2;;
+- : (int * int) list option = None
+# reinas 4;;
+- : (int * int) list option = Some [(4, 3); (3, 1); (2, 4); (1, 2)]
+# reinas 23;;
+- : (int * int) list option =
+Some
+ [(23, 14); (22, 17); (21, 15); (20, 12); (19, 16); (18, 7); (17, 23);
+  (16, 6); (15, 8); (14, 10); (13, 21); (12, 19); (11, 22); (10, 20);
+  (9, 18); (8, 13); (7, 11); (6, 9); (5, 4); (4, 2); (3, 5); (2, 3);
+  (1, 1)]
+# let all_reinas n =
+      let rec completar camino i j =
+          if i > n then [camino]
+          else if j > n then []
+          else if compatible (i, j) camino
+                  then completar ((i,j)::camino) (i+1) 1 @
+                       completar camino i (j+1)
+                else completar camino i (j+1)
+    in   completar [] 1 1;;
+val all_reinas : int -> (int * int) list list = <fun>
+# all_reinas 0;;
+- : (int * int) list list = [[]]
+# all_reinas 1;;
+- : (int * int) list list = [[(1, 1)]]
+# all_reinas 2;;
+- : (int * int) list list = []
+# all_reinas 4;;
+- : (int * int) list list =
+[[(4, 3); (3, 1); (2, 4); (1, 2)]; [(4, 2); (3, 4); (2, 1); (1, 3)]]
+# all_reinas 7;;
+- : (int * int) list list =
+[[(7, 6); (6, 4); (5, 2); (4, 7); (3, 5); (2, 3); (1, 1)];
+ [(7, 5); (6, 2); (5, 6); (4, 3); (3, 7); (2, 4); (1, 1)];
+ [(7, 4); (6, 7); (5, 3); (4, 6); (3, 2); (2, 5); (1, 1)];
+ [(7, 3); (6, 5); (5, 7); (4, 2); (3, 4); (2, 6); (1, 1)];
+ [(7, 6); (6, 3); (5, 5); (4, 7); (3, 1); (2, 4); (1, 2)];
+ [(7, 7); (6, 5); (5, 3); (4, 1); (3, 6); (2, 4); (1, 2)];
+ [(7, 6); (6, 3); (5, 7); (4, 4); (3, 1); (2, 5); (1, 2)];
+ [(7, 6); (6, 4); (5, 7); (4, 1); (3, 3); (2, 5); (1, 2)];
+ [(7, 6); (6, 3); (5, 1); (4, 4); (3, 7); (2, 5); (1, 2)];
+ [(7, 5); (6, 1); (5, 4); (4, 7); (3, 3); (2, 6); (1, 2)];
+ [(7, 4); (6, 6); (5, 1); (4, 3); (3, 5); (2, 7); (1, 2)];
+ [(7, 4); (6, 7); (5, 5); (4, 2); (3, 6); (2, 1); (1, 3)];
+ [(7, 5); (6, 7); (5, 2); (4, 4); (3, 6); (2, 1); (1, 3)];
+ [(7, 1); (6, 6); (5, 4); (4, 2); ...]; ...]
+# List.length (all_reinas 11);;
+- : int = 2680
+# List.length (all_reinas 12);;
+- : int = 14200
+# List.length (all_reinas 13);;
+- : int = 73712
