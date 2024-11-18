@@ -1039,3 +1039,160 @@ val all_reinas : int -> (int * int) list list = <fun>
 - : int = 14200
 # List.length (all_reinas 13);;
 - : int = 73712
+
+(*-----------------------------------------------------------------*)
+
+# V;;
+Error: Unbound constructor V
+# v;;
+Error: Unbound value v
+# type booleano = V | F;;
+type booleano = V | F
+# V;;
+- : booleano = V
+# F;;
+- : booleano = F
+#  let no ) function
+      F -> V | V -> F;;
+Error: Syntax error
+#  let no = function
+      F -> V | V -> F;;
+val no : booleano -> booleano = <fun>
+# no verdadero;;
+Error: Unbound value verdadero
+# let verdadero = V;;
+val verdadero : booleano = V
+# no verdadero;;
+- : booleano = F
+# let conj x y = match (x,y) with
+      (V , V ) -> V
+    | _ -> F;;
+val conj : booleano -> booleano -> booleano = <fun>
+# conj V V;;
+- : booleano = V
+# conj V F;;
+- : booleano = F
+# let falso = F;;
+val falso : booleano = F
+# let conj x y = match (x,y) with
+      (verdadero, verdadero) -> verdadero
+    | _ -> falso;;
+Error: Variable verdadero is bound several times in this matching
+# let conj x y = match (x,y) with
+      (verdadero, _) -> verdadero
+    | _ -> falso;;
+Warning 11 [redundant-case]: this match case is unused.
+
+val conj : booleano -> 'a -> booleano = <fun>
+# conj V 2;;
+- : booleano = V
+# conj verdadero falso;;
+- : booleano = V
+# conj falso 2;;
+- : booleano = F
+# conj 100+1 falso;;
+Error: This expression has type int but an expression was expected of type
+         booleano
+# conj (100+1) falso;;
+Error: This expression has type int but an expression was expected of type
+         booleano
+# let conj x y = match (x,y) with
+      (verdadero, _ ) -> y
+    | _ -> falso;;
+Warning 11 [redundant-case]: this match case is unused.
+
+val conj : 'a -> booleano -> booleano = <fun>
+# let conj x y = match (x,y) with
+      (V, _ ) -> y
+    | _ -> falso;;
+val conj : booleano -> booleano -> booleano = <fun>
+# let conj x y = match (x,y) with
+      (verdadero, verdadero) -> verdadero
+    | _ -> falso;;
+Error: Variable verdadero is bound several times in this matching
+# let conj x y = match x,y with
+      V, V -> V
+    | _ -> F;;
+val conj : booleano -> booleano -> booleano = <fun>
+# let conj = function
+      V -> (function z -> z
+    | _ -> (function _ -> F);;
+Error: Syntax error: ) expected
+Line 2, characters 9-10:   This ( might be unmatched
+# let conj = function
+      V -> (function z -> z)
+    | _ -> (function _ -> F);;
+val conj : booleano -> booleano -> booleano = <fun>
+# let conj x y = match x with
+      V -> y
+    | _ -> F;;
+val conj : booleano -> booleano -> booleano = <fun>
+# type numero = I of int | F of float;;
+type numero = I of int | F of float
+# I 3;;
+- : numero = I 3
+# F 2.3;;
+- : numero = F 2.3
+# [I 2; I 3; F 2.5];;
+- : numero list = [I 2; I 3; F 2.5]
+# let suma x y = match x, y with
+      I m, I n -> I (m + n)
+    | F x, F y -> F (x +. y)
+    | F x, I n -> F (x +. float_of_int n)
+    | _ -> suma y x;;
+Error: Unbound value suma
+Hint: If this is a recursive definition,
+you should add the rec keyword on line 1
+# let rec suma x y = match x, y with
+      I m, I n -> I (m + n)
+    | F x, F y -> F (x +. y)
+    | F x, I n -> F (x +. float_of_int n)
+    | _ -> suma y x;;
+val suma : numero -> numero -> numero = <fun>
+# suma I 3 F 3;;
+Error: The function suma has type numero -> numero -> numero
+       It is applied to too many arguments
+Line 1, characters 9-10:   This extra argument is not expected.
+# suma I 3 F 3.;;
+Error: The function suma has type numero -> numero -> numero
+       It is applied to too many arguments
+Line 1, characters 9-10:   This extra argument is not expected.
+# suma (I 3) (F 3.);;
+- : numero = F 6.
+# suma (I 3) (F 3.0);;
+- : numero = F 6.
+# let eqnum x y = match x, y with
+      I n, F z | F z, I n -> z = float_of_int n
+    | _ -> x = y;;
+val eqnum : numero -> numero -> bool = <fun>
+# type otroint = Otro of int;;
+type otroint = Otro of int
+# type dobleint = L of int | R of int;;
+type dobleint = L of int | R of int
+# type nat = Zero | Succ of nat;;
+type nat = Zero | Succ of nat
+# Succ Zero;;
+- : nat = Succ Zero
+# Succ (Succ zero);;
+Error: Unbound value zero
+# Succ (Succ Zero);;
+- : nat = Succ (Succ Zero)
+# let cero  = Zero;;
+val cero : nat = Zero
+# ler uno = Succ Zero;;
+Error: Unbound value ler
+Hint: Did you mean lor or lsr?
+# let uno = Succ Zero;;
+val uno : nat = Succ Zero
+# let dos = Succ uno;;
+val dos : nat = Succ (Succ Zero)
+# type 'a option = None | Some of 'a;;
+type 'a option = None | Some of 'a
+# Some 3;;
+- : int option = Some 3
+# Some "hola";;
+- : string option = Some "hola"
+# None;;
+- : 'a option = None
+# Some None;;
+- : 'a option option = Some None
