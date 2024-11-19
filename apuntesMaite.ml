@@ -37,6 +37,7 @@ let l r =
 	2. *. pi +. r
 ;;
 
+
 let abs x = 
 	if x >= 0 then x else -x
 
@@ -874,3 +875,144 @@ let all_reinas n =
   in
  		completa [] (1, 1)
 ;;
+
+(*18 NOVIEMBRE*)
+
+type maybe_an_int =
+	Some of int 
+	| None
+;;
+
+let (//) x y = 
+	match x, y with 
+	Some _, Some 0 -> None
+	| Some a, Some b -> Some (a/b)
+	| _ -> None 
+;;
+
+(*Definir un tipo booleano*)
+type booleano = V | F;;
+
+(*Se utiliza con pattern matching*)
+let (&&&) b1 b2 =
+  match b1, b2 with 
+    V, V -> V
+    | _ -> F
+;;
+
+let (|||) b1 b2 = 
+  match b1, b2 with 
+  V, _ | _, V -> V        
+  | _ -> F
+;;
+
+
+type palo = 
+  Pica 
+  | Trebol 
+  | Corazon 
+  | Diamante
+;;
+
+
+type numero =
+  I of int 
+| F of float
+;;
+
+let rec (++) n1 n2 = 
+  match n1, n2 with 
+  I x, I y -> I (x + y)
+| F x, F y -> F (x +. y)
+| I x, F y -> F (float x +. y)
+| _ -> n2 ++ n1
+;;
+
+type maybe_an_int = 
+   Some of int 
+ | None
+;;
+
+type maybe_a_string
+  Somes of string 
+| Nones
+;;
+
+type 'a option 
+  Some of 'a 
+| None 
+;; 
+
+type nat = 
+  Zero 
+| Succ of nat     (*Succ: sucesor*)
+;; 
+
+(*19 NOVIEMBRE*)
+
+type nat = 
+   Zero
+ | Succ of nat
+;;
+
+
+let sum n1 = function 
+   Zero -> n1
+ | Succ n2 -> sum (Succ n1) n2
+;; 
+
+(* 
+   4 3
+   5 2
+   6 1 
+   7 0
+   7
+*)
+
+let rec nat_of_int = function
+  0 -> Zero
+  | n -> Succ (nat_of_int (n-1))
+;;
+
+let nat_of_int n =
+  if n < 0 then raise (Invalid_argument "nat_of_int")
+  else nat_of_int n
+;;
+
+(* ÁRBOLES *)
+
+type 'a tree = 
+   E                                    (* E: Empty *)
+ | N of 'a * 'a  tree * 'a tree         (* N: Node *)
+;;
+
+let rec num_nodes = function 
+  E -> 0
+  | N (_, l, r) -> 
+    1 + num_nodes l + num_nodes r
+;;
+
+let rec altura = function 
+  E -> 0
+  | N (_, l, r) -> 
+    1 + max (altura l) (altura r)
+;;
+
+let rec preorden = function
+    E -> []
+  | N (n, l, r) -> 
+    (preorden l) @ (preorden r)
+;;
+
+let hojas = function
+    E -> []
+  | N (n, E, E) -> [n]
+  | N (n, l, r) -> 
+    (hojas l) @ (hojas r)
+;;
+
+type 'a tree = 
+  E 
+  | N of 'a * 'a tree           (* Al quitarle una de las ramas tengo una lista *)
+;; 
+
