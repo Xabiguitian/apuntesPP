@@ -1196,3 +1196,116 @@ type 'a option = None | Some of 'a
 - : 'a option = None
 # Some None;;
 - : 'a option option = Some None
+
+(*-----------------------------------------------------------------*)
+
+# type 'a bintree =
+      Empty | BT of 'a * 'a bintree * 'a bintree;;
+type 'a bintree = Empty | BT of 'a * 'a bintree * 'a bintree
+# Empty;;
+- : 'a bintree = Empty
+# BT (1, Emptyy, Empty);;
+Error: This variant expression is expected to have type int bintree
+       There is no constructor Emptyy within type bintree
+Hint: Did you mean Empty?
+# BT (1, Empty, Empty);;
+- : int bintree = BT (1, Empty, Empty)
+# let t0 BT (0,Empty, Empty);;
+Error: Syntax error
+# let t0 = BT (0, Empty, Empty);;
+val t0 : int bintree = BT (0, Empty, Empty)
+# let t0 = BT (1, Empty, Empty);;
+val t0 : int bintree = BT (1, Empty, Empty)
+# let t0 = BT (0, Empty, Empty);;
+val t0 : int bintree = BT (0, Empty, Empty)
+# let t1 = BT (1, Empty, Empty);;
+val t1 : int bintree = BT (1, Empty, Empty)
+# let t = BT (2, t1, t0);;
+val t : int bintree = BT (2, BT (1, Empty, Empty), BT (0, Empty, Empty))
+# let v = Empty;;
+val v : 'a bintree = Empty
+# let leaf x = BT (x, v, v);;
+val leaf : 'a -> 'a bintree = <fun>
+# leaf 0;;
+- : int bintree = BT (0, Empty, Empty)
+# leaf "hola";;
+- : string bintree = BT ("hola", Empty, Empty)
+# let tid =
+  ;;
+Error: Syntax error
+# let tid = BT (6, leaf 5, leaf 11);;
+val tid : int bintree = BT (6, BT (5, Empty, Empty), BT (11, Empty, Empty))
+# let tdd = BT (9, leaf 5, v);;
+val tdd : int bintree = BT (9, BT (5, Empty, Empty), Empty)
+# let ti = BT (7, leaf 2, tid);;
+val ti : int bintree =
+  BT (7, BT (2, Empty, Empty),
+   BT (6, BT (5, Empty, Empty), BT (11, Empty, Empty)))
+# let td =
+
+  BT (9, v, tdd);;
+val td : int bintree = BT (9, Empty, BT (9, BT (5, Empty, Empty), Empty))
+# let t = BT (1, ti, td);;
+val t : int bintree =
+  BT (1,
+   BT (7, BT (2, Empty, Empty),
+    BT (6, BT (5, Empty, Empty), BT (11, Empty, Empty))),
+   BT (9, Empty, BT (9, BT (5, Empty, Empty), Empty)))
+# let raiz = function
+
+      BT (r,_,_) -> r
+    | Empty -> raise (Failure "raiz");;
+val raiz : 'a bintree -> 'a = <fun>
+# raiz t;;
+- : int = 1
+# raiz t0;;
+- : int = 0
+# let rec altura = function
+    Em  pty -> 0
+  | B  T (_,i, d) -> 1 + max (altura i) (altura d);;
+val altura : 'a bintree -> int = <fun>
+# altura t;;
+- : int = 4
+# let rec leaves = function
+    Em  pty -> []
+  |   BT (_, i, d) -> leaves i @ leaves d;;
+val leaves : 'a bintree -> 'b list = <fun>
+# leaves t;;
+- : 'a list = []
+# t;;
+- : int bintree =
+BT (1,
+ BT (7, BT (2, Empty, Empty),
+  BT (6, BT (5, Empty, Empty), BT (11, Empty, Empty))),
+ BT (9, Empty, BT (9, BT (5, Empty, Empty), Empty)))
+# let rec leaves = function
+    E  mpty -> []
+  |   BT (r, Empty, Empty) -> [r]
+  | BT (_(_, i, d) -> leaves i @ leaves d;;
+val leaves : 'a bintree -> 'a list = <fun>
+# leaves t;;
+- : int list = [2; 5; 11; 5]
+# type 'a gtree =
+    GT of 'a * 'a gtree list;;
+type 'a gtree = GT of 'a * 'a gtree list
+# let gt0 = GT (1, []);;
+val gt0 : int gtree = GT (1, [])
+# let gt1 = GT (2, []);;
+val gt1 : int gtree = GT (2, [])
+# let gt = GT (0, [gt0; gt1; gt0]);;
+val gt : int gtree = GT (0, [GT (1, []); GT (2, []); GT (1, [])])
+# let gt' = GT (0, [gt0; gt1; gt; gt0]);;
+val gt' : int gtree =
+  GT (0,
+   [GT (1, []); GT (2, []); GT (0, [GT (1, []); GT (2, []); GT (1, [])]);
+    GT (1, [])])
+# let rec size = function
+    Empty -> 0 | BT (_, i, d) -> 1 + size i + size d;;
+  val size : 'a bintree -> int = <fun>
+# let rec gsize (GT (_, ramas)) =
+    List.  fold_left (fun acc r -> acc + gsize r) 1 ramas;;
+val gsize : 'a gtree -> int = <fun>
+# size t;;
+- : int = 9
+# gsize gt;;
+- : int = 4
