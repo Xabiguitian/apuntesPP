@@ -1309,3 +1309,102 @@ val gsize : 'a gtree -> int = <fun>
 - : int = 9
 # gsize gt;;
 - : int = 4
+
+(*-----------------------------------------------------------------*)
+
+# type 'a gtree =
+      GT of 'a * 'a gtree list;;
+type 'a gtree = GT of 'a * 'a gtree list
+# let rec size (GT (_, ramas)) =
+    List.fold_left (fun acc r -> acc + size r) 1 ramas;;
+val size : 'a gtree -> int = <fun>
+# let rec size = function
+      GT (_, []) -> 1
+  | G  T (r, h::t) -> size h + size (GT (r, t));;
+val size : 'a gtree -> int = <fun>
+# type 'a st_bintree =
+      Leaf of 'a
+    | SBT of 'a * 'a st_bintree * 'a sst_bintree;;
+Error: Unbound type constructor sst_bintree
+Hint: Did you mean st_bintree?
+# type 'a st_bintree =
+    Lea  f of 'a
+  | SBT o  f 'a * 'a st_bintree * 'a st_bintree;;
+type 'a st_bintree = Leaf of 'a | SBT of 'a * 'a st_bintree * 'a st_bintree
+# Leaf 4;;
+- : int st_bintree = Leaf 4
+# SBT (3, Leaf 21; Leaf 2);;
+Error: The constructor SBT expects 3 argument(s),
+       but is applied here to 1 argument(s)
+# SBT (3, Leaf 21, Leaf 2);;
+- : int st_bintree = SBT (3, Leaf 21, Leaf 2)
+# type 'a bintree =
+      Empty | BT of 'a * 'a bintree * 'a bintree;;
+type 'a bintree = Empty | BT of 'a * 'a bintree * 'a bintree
+
+
+
+
+
+
+
+
+
+
+(*------------- PROGRAMACIÓN IMPERATIVA -------------*)
+
+# ref;;
+- : 'a -> 'a ref = <fun>
+# ref 3;;
+- : int ref = {contents = 3}
+# ref 'a;;
+Error: Syntax error
+# ref 'a';;
+- : char ref = {contents = 'a'}
+# let i = ref 0;;
+val i : int ref = {contents = 0}
+# i = 0;;
+Error: This expression has type int but an expression was expected of type
+         int ref
+# let c = ref 'a';;
+val c : char ref = {contents = 'a'}
+# i = c;;
+Error: This expression has type char ref
+       but an expression was expected of type int ref
+       Type char is not compatible with type int
+# (!);;
+- : 'a ref -> 'a = <fun>
+# !i;;
+- : int = 0
+# !c;;
+- : char = 'a'
+# !i = 1;;
+- : bool = false
+# (:=);;
+- : 'a ref -> 'a -> unit = <fun>
+# ();;
+- : unit = ()
+# (:=) i 10 ;;
+- : unit = ()
+# i;;
+- : int ref = {contents = 10}
+# i := 10;;
+- : unit = ()
+# i := (!i + 1);;
+- : unit = ()
+# i;;
+- : int ref = {contents = 11}
+# let rec fact n =
+    if   n <= 0 then 1 else n * fact (n-1);;
+val fact : int -> int = <fun>
+# (*(while <b> do <e> done): unit*)
+(*(*<e1>;<e2>     let _ = <e1> in <e2>*);;
+# let fact n =
+      let f = ref 1 in
+    let   i = ref 2 in
+      while !i <= n do
+          f := !f * !i ;
+          i:= !i + 1
+      done;
+    !f  ;;
+val fact : int -> int = <fun>
