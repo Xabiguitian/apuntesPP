@@ -1016,3 +1016,133 @@ type 'a tree =
   | N of 'a * 'a tree           (* Al quitarle una de las ramas tengo una lista *)
 ;; 
 
+(*25 NOVIEMBRE*)
+
+type btree = 
+    Leaf of 'a 
+  | Node of 'a * 'a btree * 'a btree
+;;
+
+let mirror = function     (*Se intercambian las ramas recursivamente*)
+    Leaf x -> Leaf x 
+  | Node (x, l, r) -> Node (x, mirror r, mirror l)
+;;
+
+type 'a gtree = 
+  GT of 'a * 'a gtree list
+;;
+
+let num_nodes = function
+  GT (_, []) -> 1
+  | GT (_, 1) -> 
+        List.fold_left (+) 0 (List.map num_nodes l)
+;;
+
+let rec num_nodes (GT (_, l)) = 
+      List.fold_left (+) 1 (List.map num_nodes l)
+;;
+
+let rec num_nodes' = function
+    GT (_, [])  -> 1
+  | GT (x, h::t) -> 
+      num_nodes' h + num_nodes' (GT (x, t))
+;;
+
+(* BUCLES *)
+
+for i = 0 + 1 to 4 + 1  do 
+  print_endline (string_of_int i)
+done
+
+let fact n = 
+  let f = ref 1 in 
+  for i = 1 to n do 
+    f := i * !f 
+  done;
+;;
+
+e1 ; e2 --> let _ = e1 in e2
+
+(*26 NOVIEMBRE*) (*MOLINELLI*)
+
+let fact n = 
+  let f = ref 1 in 
+  let i = ref 2 in
+  while !i = <= n do 
+    f := !f * !i;
+    i := !i + 1;
+  done;
+  !f;
+;;
+
+let fact n = 
+  let rec loop (f, i) = 
+    if i <= n then loop (f * i, i + 1)
+    else f 
+  in loop (1, 2)
+;;
+
+(* BUCLE FOR *)
+
+for <i> = <i1> to <i2> do <e> done : unit
+(* 1º evalúa i1 y devuelve un valor v1 (int) *)
+(* Después evalúa i2 y devuelve un valor v2 (int) *)
+(* let <i> = 3 in <e> *)
+(* let <i> = 5 in <e> , l *)
+
+(* Ángela guapa, un besito para ti si lees esto *)
+
+let fact n = 
+  let f = ref 1 in 
+  for i = 2 to n do 
+  f := !f * i
+  done;
+  !f  
+;;
+
+let fact n = 
+  let f = ref 1 in 
+  let i = ref 2 in 
+  while !i <= n do 
+    f := !f * !i ;
+    i := !i + 1
+  done;
+  !f       (* (!) contenido de f *)
+;;
+let fact n = 
+  let f = ref 1 in 
+  for i = 2 to n do 
+  f := !f * i
+  done;
+  !f  
+;;
+
+e1 ; e2 ; 
+
+(* Variables (referencias) *)
+(* Secuencia (;) *)
+(* Alternativa (if-then-else) *)
+(* Bucles (while) *)
+
+(* Arrays *)
+[||];; (* Array vacío *)
+
+let vprod v1 v2 = 
+  if Array.length v1 = Array.length v2 then
+    let p = ref 0, in 
+    for i = 0 to Array.length v1 - 1 do 
+      p := !p +. v1.(i) *. v2.(i)
+    done;
+    !p 
+  else 
+    raise (Invalid_argument "vprod")
+;;
+
+(* Array de arrays *)
+let m = 
+  [|
+    [| 1; 2; 3 |];
+    [| 4; 5; 6 |];
+    [| 7; 8; 9; 10 |]
+  |]
+;;
