@@ -1752,3 +1752,45 @@ Alert deprecated: ISO-Latin1 characters in identifiers
 Error: Syntax error
 # envejece mery;;
 - : persona = {nombre = "Maria"; edad = 25}
+
+(*-----------------------------------------------------------------*)
+
+type persona = {nombre: string; edad: int}
+let envejece p = 
+	{nombre = p.nombre; edad = p.edad + 1};;
+
+let envejece p =
+	{p with edad = p.edad + 1};;
+	
+let envejece = function
+	{nombre = n; edad = e} -> {nombre = n; edad = e + 1};;
+	
+let envejece {nombre = n; edad = e} =
+	{nombre = n; edad = e + 1};;
+	
+let mayor {edad} = edad >= 18;;
+
+type persona' = {nombre: string; mutable edad: int};;
+
+let envejece' p=
+  p.edad<-p.edad+1;;
+
+(*alfa refs de ocaml*)
+type 'a ref = {mutable contents : 'a};;
+
+let ref x ={contents =x};;
+
+let (!) v=v.contents;;
+
+let (:=) v x=v.contents <- x;;
+
+let  n = ref 0
+
+(*si solo va a tener un caso notación abreviada*)
+let next() =
+    n := !n +1;
+    !n;;
+
+    (*reset de uni para comprobar en termianl sino ejecutaria la definición de la función*)
+let reset ()=
+  n :=0;;
