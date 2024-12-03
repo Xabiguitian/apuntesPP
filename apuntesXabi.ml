@@ -1794,3 +1794,67 @@ let next() =
     (*reset de uni para comprobar en termianl sino ejecutaria la definición de la función*)
 let reset ()=
   n :=0;;
+
+(*-----------------------------------------------------------------*)
+
+# let n = ref 0;;
+val n : int ref = {contents = 0}
+# let next () =
+      n := !n + 1;
+      !n;;
+val next : unit -> int = <fun>
+# let reset () =
+      n := 0;;
+val reset : unit -> unit = <fun>
+# let next () =
+    let n = ref 0 in
+    n := !n +1;
+    !n;;
+val next : unit -> int = <fun>
+# next;;
+- : unit -> int = <fun>
+# next ();;
+- : int = 1
+# next ();;
+- : int = 1
+# let next =
+    f  unction () ->
+          let n = ref 0 in
+          n := !n +1;
+          !n;;
+val next : unit -> int = <fun>
+# next ();;
+- : int = 1
+# next ();;
+- : int = 1
+# let next =
+    l  et n = ref 0 in
+    fu  nction () ->
+          n := !n + 1;
+          !n;;
+val next : unit -> int = <fun>
+# next ();;
+- : int = 1
+# next ();;
+- : int = 2
+# (* ahora si funciona la función next *);;
+# let next =
+    let n = ref   0 in
+    fun  ction () ->
+          n := !n + 1;
+        !n;;
+val next : unit -> int = <fun>
+# let n = ref 0 in
+    (f(function () -> n := !n + 1; !n),
+    (f(function () -> n := 0);;
+- : (unit -> int) * (unit -> unit) = (<fun>, <fun>)
+# let next, reset =
+      let n = ref 0 in
+          (function () -> n := !n + 1; !n),
+        ( (function () -> n := 0);;
+val next : unit -> int = <fun>
+val reset : unit -> unit = <fun>
+# let counter =
+      {next: unit -> int;
+       reset: unit -> unit};;
+Error: Unbound record field next
