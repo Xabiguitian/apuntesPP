@@ -1858,3 +1858,48 @@ val reset : unit -> unit = <fun>
       {next: unit -> int;
        reset: unit -> unit};;
 Error: Unbound record field next
+
+(*-----------------------------------------------------------------*)
+
+let doble_next o =
+    2 * o#next;;
+
+let doble o = object
+    method next = 2 * o#next
+    method reset = o#reset
+end;;
+	
+let new_counter () = object
+    val mutable n = 0
+    method next = n <- n + 1; n
+    method reset = n <- 0
+end;;
+
+let new_double_counter () = object
+    val counter = new_counter ()
+    method next = 2 * counter#next
+    method reset = counter#reset
+end;;
+
+class counter = object
+    val mutable n = 0
+    method next = n <- n + 1; n
+    method reset = n <- 0
+end;;
+
+let x = new counter;;
+
+class counter_with_init ini = object
+    val mutable n = ini -1
+    method next = n <- n + 1; n
+    method reset = n <- 0
+end;;
+
+class counter_with_init'n'max ini max =
+    object (self)
+        inherit counter_with_init ini (super)
+        method next = if super#next > max then
+                         (self#reset; super#next)
+                      else self#next
+    end;;
+
