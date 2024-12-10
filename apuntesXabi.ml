@@ -1903,3 +1903,13 @@ class counter_with_init'n'max ini max =
                       else self#next
     end;;
 
+(*-----------------------------------------------------------------*)
+
+let k' = (k :> counter);;
+(*Si counter es un objeto derivado de k pero con algunas reducciones, k' pasa a ser el objeto k pero con las reducciones de counter*)
+
+class intref = object
+    val mutable content
+    method get = content
+    method set v = content <- v
+end;;
