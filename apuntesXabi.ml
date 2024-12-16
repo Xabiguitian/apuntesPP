@@ -1913,3 +1913,115 @@ class intref = object
     method get = content
     method set v = content <- v
 end;;
+
+(*-----------------------------------------------------------------*)
+
+# class ['a] queue = object (self)
+    val mutable fron  t = []
+      val mutable back = []
+    method push (e: 'a) =
+        back <- e::back
+    method top = match front, back with
+        h::_, _ -> Some h
+      |   [],     [] ->   No  ne
+        | [], _ -> front <- List.rev back;
+                   back <- [];
+                   self#top
+      method pop = match front, back with
+          h::t, _ -> front <- t; Some h
+        | [], [] -> None
+        | [], _ -> front <- List.rev back;
+                   back <- [];
+                   self#pop
+en  d;;
+class ['a] queue :
+  object
+    val mutable back : 'a list
+    val mutable front : 'a list
+    method pop : 'a option
+    method push : 'a -> unit
+    method top : 'a option
+  end
+# let q = new queue;;
+val q : '_weak1 queue = <obj>
+# q#top;;
+- : '_weak1 option = None
+# q#push;;
+- : '_weak1 -> unit = <fun>
+# q#push "Hola";;
+- : unit = ()
+# q;;
+- : string queue = <obj>
+# a#top;;
+Error: Unbound value a
+# q#top;;
+- : string option = Some "Hola"
+# q#push "Adios";;
+- : unit = ()
+# q#top;;
+- : string option = Some "Hola"
+# q#pop;;
+- : string option = Some "Hola"
+# q#pop;;
+- : string option = Some "Adios"
+# q#pop;;
+- : string option = None
+# let rec pushl l q = match l with
+      [] -> ()
+  |   h::t -> q#push h; pushl t q;;
+val pushl : 'a list -> < push : 'a -> 'b; .. > -> unit = <fun>
+# let rec drain q =
+    match q#po  p with
+          None -> ()
+        | _ -> drain q;;
+val drain : < pop : 'a option; .. > -> unit = <fun>
+# let rec qiter f q =
+    matc  h q#pop with
+          None -> ()
+        | Some e -> f e; qiter f q;;
+val qiter : ('a -> 'b) -> < pop : 'a option; .. > -> unit = <fun>
+# let q = new queue
+  ;;
+val q : '_weak2 queue = <obj>
+# pushl (List.init 30 Fun.id) q;;
+- : unit = ()
+# q#top;;
+- : int option = Some 0
+#
+let rec qiter' f q =
+    let q = Oo.copy q in
+    qiter   f q;;
+    val qiter' : ('a -> 'b) -> < pop : 'a option; .. > -> unit = <fun>
+#
+  qiter' (Printf.printf "%d\n") q;;
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+- : unit = ()
