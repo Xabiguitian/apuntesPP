@@ -2025,3 +2025,143 @@ let rec qiter' f q =
 28
 29
 - : unit = ()
+
+(*-----------------------------------------------------------------*)
+
+# open_out;;
+- : string -> out_channel = <fun>
+# open_out "output";;
+- : out_channel = <abstr>
+# let salida = open_out "misalida";;
+val salida : out_channel = <abstr>
+#
+[1]  + 1511 suspended  ledit ocaml
+    ~  ls                                                                                                                    TSTP ✘  6m 52s   
+Applications                       Movies                             Public                             misalida
+Desktop                            Music                              Waveforms                          output
+Documents                          OneDrive - UDC                     anaconda3
+Downloads                          OneDrive - Universidade da Coruña  install.sh
+Library                            Pictures                           java
+    ~  ls -las                                                                                                                               ✔  
+total 1168
+  0 drwxr-x---+  62 mac1  staff    1984 Dec 17 09:49 .
+  0 drwxr-xr-x    5 root  admin     160 Dec 15 15:50 ..
+  0 -rw-r--r--@   1 mac1  staff       0 Dec 17 09:48 misalida
+  0 -rw-r--r--@   1 mac1  staff       0 Dec 17 09:48 output
+    ~  %1                                                                                                                                    ✔  
+[1]  + 1511 continued  ledit ocaml
+output_char;;
+- : out_channel -> char -> unit = <fun>
+# output_chanel salida 'X';;
+Error: Unbound value output_chanel
+Hint: Did you mean output_char?
+# output_char salida 'X';;
+- : unit = ()
+# salida;;
+- : out_channel = <abstr>
+# flush;;
+- : out_channel -> unit = <fun>
+# flush salida;;
+- : unit = ()
+#
+[1]  + 1511 suspended  ledit ocaml
+    ~  ls -las                                                                                                                TSTP ✘  6m 9s   
+total 1176
+  0 drwxr-x---+  62 mac1  staff    1984 Dec 17 09:55 .
+  0 drwxr-xr-x    5 root  admin     160 Dec 15 15:50 ..
+  8 -rw-r--r--@   1 mac1  staff       1 Dec 17 09:55 misalida
+  0 -rw-r--r--@   1 mac1  staff       0 Dec 17 09:48 output
+    ~  %1                                                                                                                                    ✔  
+[1]  + 1511 continued  ledit ocaml
+
+[1]  + 1511 suspended  ledit ocaml
+    ~  ls -las                                                                                                                  TSTP ✘  20s   
+total 1176
+  0 drwxr-x---+  62 mac1  staff    1984 Dec 17 09:56 .
+  0 drwxr-xr-x    5 root  admin     160 Dec 15 15:50 ..
+  8 -rw-r--r--@   1 mac1  staff       1 Dec 17 09:55 misalida
+  0 -rw-r--r--@   1 mac1  staff       0 Dec 17 09:48 output
+    ~  cat misalida                                                                                                                          ✔  
+X%
+    ~  %1                                                                                                                                    ✔  
+[1]  + 1511 continued  ledit ocaml
+output_string;;
+- : out_channel -> string -> unit = <fun>
+# output_binary_int;;
+- : out_channel -> int -> unit = <fun>
+# output_value;;
+- : out_channel -> 'a -> unit = <fun>
+# close_out salida;;
+- : unit = ()
+# output_string stdout "Hola\n";;
+Hola
+- : unit = ()
+# print_char;;
+- : char -> unit = <fun>
+# print_string;;
+- : string -> unit = <fun>
+# print_endline;;
+- : string -> unit = <fun>
+# print_endline "Hola";;
+Hola
+- : unit = ()
+# print_string "Hola";;
+Hola- : unit = ()
+# let sal_standard = open_out "/dev/stdout";;
+val sal_standard : out_channel = <abstr>
+# output_string sal_standard "Ola!\n";;
+- : unit = ()
+# flush sal_standard;;
+Ola!
+- : unit = ()
+# close_out sal_standard;;
+- : unit = ()
+# output_string sal_standard "Ola!\n";;
+Exception: Sys_error "Bad file descriptor".
+# close_out stdout;;
+Fatal error: exception Sys_error("Bad file descriptor")
+
+
+    ~  ledit ocaml                                                                                                                    ✔  11m 3s 
+OCaml version 5.2.0
+Enter #help;; for help.
+
+# open_in;;
+- : string -> in_channel = <fun>
+# let entrada = open_in "misalid";;
+Exception: Sys_error "misalid: No such file or directory".
+# let entrada = open_in "misalida";;
+val entrada : in_channel = <abstr>
+# input_char;;
+- : in_channel -> char = <fun>
+# input_char entrada;;
+- : char = 'X'
+# input_char entrada;;
+Exception: End_of_file.
+# input_line;;
+- : in_channel -> string = <fun>
+# let file = open_out "mislistas";;
+val file : out_channel = <abstr>
+# output_value file (List.init 100 succ);;
+- : unit = ()
+# output_value file ['a';'e';'i'];;
+- : unit = ()
+# output_value dile ["Ciao"];;
+Error: Unbound value dile
+Hint: Did you mean file?
+# output_value file ["Ciao"];;
+- : unit = ()
+# output_value file;;
+- : '_weak1 -> unit = <fun>
+# close_out file;;
+- : unit = ()
+# let entrada = open_in "mislistas";;
+val entrada : in_channel = <abstr>
+# input_value;;
+- : in_channel -> 'a = <fun>
+# input_value entrada;;
+- : 'a = <poly>
+# seek_in;;
+- : in_channel -> int -> unit = <fun>
+# seek_in entrada 0;;
+- : unit = ()
